@@ -1,5 +1,5 @@
 import { DoorOpenIcon, QrCodeIcon, ShieldCheckIcon } from "lucide-react";
-import type { RefObject } from "react";
+import { useState, type RefObject } from "react";
 import type { UserBooth } from "./types";
 
 interface AccessTabProps {
@@ -13,6 +13,7 @@ interface AccessTabProps {
   doorOpenSeconds: number;
   accessGranted: boolean | null;
   videoRef: RefObject<HTMLVideoElement | null>;
+  onAuthenticateBoothId: (boothId: string) => void;
   onStartScanner: () => void;
   onStopScanner: () => void;
 }
@@ -28,9 +29,12 @@ export function AccessTab({
   doorOpenSeconds,
   accessGranted,
   videoRef,
+  onAuthenticateBoothId,
   onStartScanner,
   onStopScanner,
 }: AccessTabProps) {
+  const [boothIdInput, setBoothIdInput] = useState("");
+
   return (
     <section className="mt-5 grid gap-4 lg:grid-cols-2">
       <article className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-200">
@@ -79,6 +83,30 @@ export function AccessTab({
 
           {accessError && <p className="text-sm text-rose-600">{accessError}</p>}
           {accessMessage && <p className="text-sm text-emerald-700">{accessMessage}</p>}
+
+          <div className="rounded-xl border border-gray-200 bg-gray-50 p-3">
+            <p className="text-sm font-medium text-gray-800">Camera not working?</p>
+            <p className="mt-1 text-xs text-gray-600">
+              Enter the booth ID assigned to the kiosk and authenticate manually.
+            </p>
+            <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+              <input
+                type="text"
+                value={boothIdInput}
+                onChange={(event) => setBoothIdInput(event.target.value)}
+                placeholder="Enter booth ID (e.g. 1)"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-800 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+              />
+              <button
+                type="button"
+                disabled={authenticatingBooth || boothIdInput.trim() === ""}
+                onClick={() => onAuthenticateBoothId(boothIdInput)}
+                className="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                Authenticate ID
+              </button>
+            </div>
+          </div>
         </div>
       </article>
 
@@ -88,7 +116,7 @@ export function AccessTab({
           <p className="text-sm text-gray-600">Last scanned booth</p>
           <p className="font-semibold text-gray-800">{lastScannedBooth ? lastScannedBooth.name : "No booth scanned yet"}</p>
           <p className="text-xs text-gray-500">{lastScannedBooth?.locationName ?? "Scan booth QR to identify location"}</p>
-          {lastScannedQr && <p className="mt-2 text-xs text-gray-500">Last QR: {lastScannedQr}</p>}
+          {lastScannedQr && <p className="mt-2 text-xs text-gray-500">Last credential: {lastScannedQr}</p>}
         </div>
 
         <div className="mt-4 rounded-xl border border-indigo-200 bg-indigo-50 p-4">

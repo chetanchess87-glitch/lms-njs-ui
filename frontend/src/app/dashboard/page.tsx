@@ -11,6 +11,7 @@ import { BoothTab } from "@/components/dashboard/user/BoothTab";
 import { ProfileTab } from "@/components/dashboard/user/ProfileTab";
 import { SubscriptionTab } from "@/components/dashboard/user/SubscriptionTab";
 import { UserDashboardLayout } from "@/components/dashboard/user/UserDashboardLayout";
+import { resolveBoothByCredential } from "@/lib/boothAccess";
 import type {
   BorrowingActivityItem,
   BorrowingTrendData,
@@ -206,16 +207,6 @@ function haversineKm(aLat: number, aLng: number, bLat: number, bLng: number) {
   return earthKm * (2 * Math.atan2(Math.sqrt(aa), Math.sqrt(1 - aa)));
 }
 
-function parseBoothFromQr(qrValue: string, boothList: UserBooth[]): UserBooth | null {
-  const parsedId = Number.parseInt(qrValue, 10);
-  if (!Number.isNaN(parsedId)) {
-    return boothList.find((booth) => booth.id === parsedId) ?? null;
-  }
-
-  const normalized = qrValue.toLowerCase();
-  return boothList.find((booth) => normalized.includes(booth.locationName.toLowerCase()) || normalized.includes(booth.name.toLowerCase())) ?? null;
-}
-
 export default function DashboardPage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<DashboardTab>("access");
@@ -364,16 +355,20 @@ export default function DashboardPage() {
     return () => stopScanner();
   }, []);
 
-  const handleQrAuth = (qrValue: string) => {
+  const authenticateBoothCredential = (credential: string, mode: "scan" | "id") => {
     setAuthenticatingBooth(true);
     setAccessError(null);
     setAccessMessage(null);
-    setLastScannedQr(qrValue);
+    setLastScannedQr(credential);
 
-    const matchedBooth = parseBoothFromQr(qrValue, accessibleBooths);
+    const matchedBooth = resolveBoothByCredential(credential, accessibleBooths, mode);
     if (!matchedBooth) {
       setAccessGranted(false);
-      setAccessError("Unrecognized booth QR. Please scan a valid booth QR code.");
+      setAccessError(
+        mode === "id"
+          ? "Invalid booth ID or booth is not accessible for your account."
+          : "Unrecognized booth QR. Please scan a valid booth QR code."
+      );
       setAuthenticatingBooth(false);
       return;
     }
@@ -391,6 +386,14 @@ export default function DashboardPage() {
     setDoorOpenUntil(new Date().getTime() + 30_000);
     setAccessMessage(`Access granted to ${matchedBooth.name}. Door unlocked for 30 seconds.`);
     setAuthenticatingBooth(false);
+  };
+
+  const handleQrAuth = (qrValue: string) => {
+    authenticateBoothCredential(qrValue, "scan");
+  };
+
+  const handleBoothIdAuth = (boothId: string) => {
+    authenticateBoothCredential(boothId, "id");
   };
 
   const startScanner = async () => {
@@ -658,6 +661,7 @@ export default function DashboardPage() {
           doorOpenSeconds={doorOpenSeconds}
           accessGranted={accessGranted}
           videoRef={videoRef}
+          onAuthenticateBoothId={handleBoothIdAuth}
           onStartScanner={startScanner}
           onStopScanner={stopScanner}
         />
