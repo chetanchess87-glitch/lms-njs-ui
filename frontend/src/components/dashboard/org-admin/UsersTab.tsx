@@ -46,7 +46,7 @@ export function UsersTab({
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[900px] border-collapse text-sm">
+          <table className="hidden w-full min-w-[900px] border-collapse text-sm md:table">
             <thead>
               <tr className="border-b border-gray-200 text-left text-gray-600">
                 <th className="py-2 w-1/4">Name</th>
@@ -97,6 +97,47 @@ export function UsersTab({
               ))}
             </tbody>
           </table>
+
+          <div className="space-y-3 md:hidden">
+            {users.map((user) => (
+              <article key={user.id} className="rounded-xl border border-gray-200 bg-gray-50 p-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">{user.name}</p>
+                    <p className="text-xs text-gray-500">{user.email}</p>
+                  </div>
+                  <span
+                    className={clsx(
+                      "inline-block rounded-full px-2 py-1 text-xs font-medium",
+                      userStatuses[user.id] === "Active" ? "bg-emerald-100 text-emerald-700" : "bg-gray-100 text-gray-700"
+                    )}
+                  >
+                    {userStatuses[user.id]}
+                  </span>
+                </div>
+                <p className="mt-2 text-xs text-gray-600">Role: {user.role}</p>
+                <p className="mt-1 text-xs text-gray-600">Joined: {user.joinDate}</p>
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <label className="inline-flex items-center gap-2 text-xs text-gray-700">
+                    <input
+                      type="checkbox"
+                      checked={userStatuses[user.id] === "Active"}
+                      onChange={(event) => onToggleUser(user.id, event.target.checked)}
+                      className="rounded cursor-pointer"
+                    />
+                    Enabled
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => onRequestRemoveUser(user.id)}
+                    className="rounded-lg bg-rose-100 px-2 py-1 text-xs font-medium text-rose-700 hover:bg-rose-200"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
 
         <div className="mt-4 flex gap-2 pt-4 border-t border-gray-200">

@@ -21,7 +21,7 @@ export function BooksTab({ borrowingActivity, onOpenBulkUpload }: BooksTabProps)
           </button>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[700px] border-collapse text-sm">
+          <table className="hidden w-full min-w-[700px] border-collapse text-sm md:table">
             <thead>
               <tr className="border-b border-gray-200 text-left text-gray-600">
                 <th className="py-2">User</th>
@@ -45,6 +45,21 @@ export function BooksTab({ borrowingActivity, onOpenBulkUpload }: BooksTabProps)
                     </td>
                   </tr>
                 ))}
+
+                <div className="space-y-3 md:hidden">
+                  {borrowingActivity
+                    .filter((item) => item.action === "borrowed")
+                    .map((item, idx) => (
+                      <article key={idx} className="rounded-xl border border-gray-200 bg-gray-50 p-3">
+                        <p className="text-sm font-semibold text-gray-900">{item.book}</p>
+                        <p className="mt-1 text-xs text-gray-600">User: {item.user}</p>
+                        <p className="mt-1 text-xs text-gray-500">Booth: {item.booth}</p>
+                        <span className="mt-2 inline-flex rounded-full bg-emerald-100 px-2 py-1 text-xs font-medium text-emerald-700">
+                          Active
+                        </span>
+                      </article>
+                    ))}
+                </div>
             </tbody>
           </table>
         </div>

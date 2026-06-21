@@ -194,9 +194,9 @@ export function OrgAdminDashboard({
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-slate-100">
+    <main className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-slate-100 lg:grid lg:min-h-dvh lg:grid-cols-[16rem_minmax(0,1fr)]">
       {/* Sidebar */}
-      <aside className="fixed left-0 top-0 h-screen w-64 border-r border-gray-200 bg-white p-6 overflow-y-auto">
+      <aside className="w-full border-b border-gray-200 bg-white p-4 lg:sticky lg:top-0 lg:h-dvh lg:overflow-y-auto lg:border-b-0 lg:border-r lg:p-6">
         {/* Logo */}
         <div className="mb-8 flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-600 to-violet-600 text-white">
@@ -223,7 +223,7 @@ export function OrgAdminDashboard({
         </div>
 
         {/* Navigation */}
-        <nav className="mb-8 space-y-2">
+        <nav className="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:mb-8 lg:block lg:space-y-2">
           {(["overview", "books", "activity", "subscriptions", "users"] as OrgTab[]).map((tab) => {
             const Icon = tabIcons[tab];
             return (
@@ -255,16 +255,16 @@ export function OrgAdminDashboard({
       </aside>
 
       {/* Main Content */}
-      <div className="ml-64 flex flex-col min-h-screen">
+      <div className="flex min-h-screen min-w-0 flex-col lg:min-h-dvh">
         {/* Header */}
-        <header className="border-b border-gray-200 bg-white px-8 py-6 shadow-sm">
-          <div className="flex items-center justify-between">
+        <header className="border-b border-gray-200 bg-white px-4 py-4 shadow-sm sm:px-6 lg:px-8 lg:py-6">
+          <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+              <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Dashboard</h1>
               <p className="mt-1 text-sm text-gray-600">Organization: {orgStats.organizationName}</p>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4">
               <button className="rounded-full p-2 text-gray-600 hover:bg-gray-100 transition-colors">
                 <BellIcon className="h-5 w-5" />
               </button>
@@ -273,7 +273,7 @@ export function OrgAdminDashboard({
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-indigo-600 to-violet-600 text-xs font-bold text-white">
                   OA
                 </div>
-                <div>
+                <div className="hidden sm:block">
                   <p className="text-sm font-medium text-gray-900">Org Admin</p>
                   <p className="text-xs text-gray-500">{orgStats.organizationName}</p>
                 </div>
@@ -283,7 +283,7 @@ export function OrgAdminDashboard({
         </header>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-auto p-8">
+        <div className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8">
           {orgTab === "overview" && (
             <OverviewTab
               orgStats={orgStats}

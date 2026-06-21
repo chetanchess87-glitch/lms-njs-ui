@@ -1027,8 +1027,8 @@ export function AppAdminDashboard({ onLogout }: AppAdminDashboardProps) {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-slate-100">
-      <aside className="fixed left-0 top-0 h-screen w-64 overflow-y-auto border-r border-gray-200 bg-white p-6">
+    <main className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-slate-100 lg:grid lg:min-h-dvh lg:grid-cols-[16rem_minmax(0,1fr)]">
+      <aside className="w-full border-b border-gray-200 bg-white p-4 lg:sticky lg:top-0 lg:h-dvh lg:overflow-y-auto lg:border-b-0 lg:border-r lg:p-6">
         <div className="mb-8 flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-600 to-violet-600 text-white">
             <BookCopyIcon className="h-5 w-5" />
@@ -1052,7 +1052,7 @@ export function AppAdminDashboard({ onLogout }: AppAdminDashboardProps) {
           </div>
         </div>
 
-        <nav className="mb-8 space-y-2">
+        <nav className="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:mb-8 lg:block lg:space-y-2">
           {tabOrder.map((tab) => {
             const Icon = tabIcons[tab];
             return (
@@ -1083,11 +1083,11 @@ export function AppAdminDashboard({ onLogout }: AppAdminDashboardProps) {
         </button>
       </aside>
 
-      <div className="ml-64 flex min-h-screen flex-col">
-        <header className="border-b border-gray-200 bg-white px-8 py-6 shadow-sm">
-          <div className="flex items-center justify-between">
+      <div className="flex min-h-screen min-w-0 flex-col lg:min-h-dvh">
+        <header className="border-b border-gray-200 bg-white px-4 py-4 shadow-sm sm:px-6 lg:px-8 lg:py-6">
+          <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">{activeTab === "overview" ? "Dashboard" : currentConfig?.title}</h1>
+              <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">{activeTab === "overview" ? "Dashboard" : currentConfig?.title}</h1>
               <p className="mt-1 text-sm text-gray-600">
                 {activeTab === "overview"
                   ? "Platform-wide control center for library operations"
@@ -1095,7 +1095,7 @@ export function AppAdminDashboard({ onLogout }: AppAdminDashboardProps) {
               </p>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               {currentDataTab && currentConfig && currentConfig.allowAdd !== false && (
                 <>
                   {(currentDataTab === "users" || currentDataTab === "inventory") && (
@@ -1124,7 +1124,7 @@ export function AppAdminDashboard({ onLogout }: AppAdminDashboardProps) {
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-indigo-600 to-violet-600 text-xs font-bold text-white">
                   AA
                 </div>
-                <div>
+                <div className="hidden sm:block">
                   <p className="text-sm font-medium text-gray-900">Admin</p>
                   <p className="text-xs text-gray-500">Platform</p>
                 </div>
@@ -1133,7 +1133,7 @@ export function AppAdminDashboard({ onLogout }: AppAdminDashboardProps) {
           </div>
         </header>
 
-        <div className="flex-1 overflow-auto p-8">
+        <div className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8">
           {activeTab === "overview" && (
             <div className="space-y-6">
               <section>
@@ -1235,7 +1235,7 @@ export function AppAdminDashboard({ onLogout }: AppAdminDashboardProps) {
                 <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
                   <h2 className="mb-4 text-lg font-bold text-gray-900">Sales by Organization</h2>
                   <div className="overflow-x-auto">
-                    <table className="w-full min-w-[520px] border-collapse text-sm">
+                    <table className="hidden w-full min-w-[520px] border-collapse text-sm md:table">
                       <thead>
                         <tr className="border-b border-gray-200 text-left text-gray-600">
                           <th className="py-2 pr-3">Organization</th>
@@ -1261,13 +1261,27 @@ export function AppAdminDashboard({ onLogout }: AppAdminDashboardProps) {
                         ))}
                       </tbody>
                     </table>
+
+                    <div className="space-y-3 md:hidden">
+                      {organizationSalesRows.map((row) => (
+                        <article key={row.organization} className="rounded-xl border border-gray-200 bg-gray-50 p-3">
+                          <p className="text-sm font-semibold text-gray-900">{row.organization}</p>
+                          <p className="mt-1 text-xs text-gray-600">Plan: {row.plan}</p>
+                          <p className="mt-1 text-xs text-gray-600">Seats: {row.activeSeats}</p>
+                          <p className="mt-1 text-xs text-gray-600">Revenue: INR {row.revenue.toLocaleString()}</p>
+                          <span className={clsx("mt-2 inline-flex rounded-full px-2 py-1 text-xs font-medium", getStatusTone(row.status))}>
+                            {row.status}
+                          </span>
+                        </article>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
                 <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
                   <h2 className="mb-4 text-lg font-bold text-gray-900">Sales by Individual Subscribers</h2>
                   <div className="overflow-x-auto">
-                    <table className="w-full min-w-[520px] border-collapse text-sm">
+                    <table className="hidden w-full min-w-[520px] border-collapse text-sm md:table">
                       <thead>
                         <tr className="border-b border-gray-200 text-left text-gray-600">
                           <th className="py-2 pr-3">User</th>
@@ -1295,6 +1309,21 @@ export function AppAdminDashboard({ onLogout }: AppAdminDashboardProps) {
                         )}
                       </tbody>
                     </table>
+
+                    <div className="space-y-3 md:hidden">
+                      {userSalesRows.length > 0 ? (
+                        userSalesRows.map((row) => (
+                          <article key={`${row.name}-${row.org}`} className="rounded-xl border border-gray-200 bg-gray-50 p-3">
+                            <p className="text-sm font-semibold text-gray-900">{row.name}</p>
+                            <p className="mt-1 text-xs text-gray-600">Organization: {row.org}</p>
+                            <p className="mt-1 text-xs text-gray-600">Plan: {row.plan}</p>
+                            <p className="mt-1 text-xs text-gray-600">Revenue: INR {row.revenue.toLocaleString()}</p>
+                          </article>
+                        ))
+                      ) : (
+                        <p className="rounded-xl border border-gray-200 bg-gray-50 p-3 text-sm text-gray-500">No individual subscriptions yet.</p>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1324,7 +1353,7 @@ export function AppAdminDashboard({ onLogout }: AppAdminDashboardProps) {
                 <div key={group.subscriptionType} className="rounded-lg border border-gray-200 p-4">
                   <h3 className="mb-3 text-base font-semibold text-gray-900">{group.subscriptionType}</h3>
                   <div className="overflow-x-auto">
-                    <table className="w-full min-w-[980px] border-collapse text-sm">
+                    <table className="hidden w-full min-w-[980px] border-collapse text-sm md:table">
                       <thead>
                         <tr className="border-b border-gray-200 text-left text-gray-600">
                           <th className="py-2 pr-3">Organization</th>
@@ -1352,6 +1381,20 @@ export function AppAdminDashboard({ onLogout }: AppAdminDashboardProps) {
                         ))}
                       </tbody>
                     </table>
+
+                    <div className="space-y-3 md:hidden">
+                      {group.rows.map((row) => (
+                        <article key={String(row.id)} className="rounded-xl border border-gray-200 bg-gray-50 p-3">
+                          <p className="text-sm font-semibold text-gray-900">{String(row.organization ?? "-")}</p>
+                          <p className="mt-1 text-xs text-gray-600">Active / Total: {String(row.seatsUsed ?? "0")} / {String(row.seatsTotal ?? "0")}</p>
+                          <p className="mt-1 text-xs text-gray-600">Renewal: {String(row.renewal ?? "-")}</p>
+                          <p className="mt-1 text-xs text-gray-600">Sales: INR {Number(row.orgSalesInr ?? 0).toLocaleString()}</p>
+                          <span className={clsx("mt-2 inline-flex rounded-full px-2 py-1 text-xs font-medium", getStatusTone(String(row.status ?? "")))}>
+                            {String(row.status ?? "-")}
+                          </span>
+                        </article>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -1378,7 +1421,7 @@ export function AppAdminDashboard({ onLogout }: AppAdminDashboardProps) {
                   )}
                 </div>
                 <div className="overflow-x-auto">
-                  <table className="w-full min-w-[980px] border-collapse text-sm">
+                  <table className="hidden w-full min-w-[980px] border-collapse text-sm md:table">
                     <thead>
                       <tr className="border-b border-gray-200 text-left text-gray-600">
                         {currentConfig.columns.map((column) => (
@@ -1410,13 +1453,36 @@ export function AppAdminDashboard({ onLogout }: AppAdminDashboardProps) {
                       ))}
                     </tbody>
                   </table>
+
+                  <div className="space-y-3 md:hidden">
+                    {filteredRows.map((row) => (
+                      <article key={String(row.id)} className="rounded-xl border border-gray-200 bg-gray-50 p-3">
+                        {currentConfig.columns.map((column) => {
+                          const value = row[column.key];
+                          const isStatus = column.key === "status";
+                          return (
+                            <div key={`${row.id}-${column.key}`} className="mt-1 text-xs text-gray-600 first:mt-0">
+                              <span className="font-medium text-gray-700">{column.label}: </span>
+                              {isStatus ? (
+                                <span className={clsx("inline-flex rounded-full px-2 py-1 text-xs font-medium", getStatusTone(String(value ?? "")))}>
+                                  {String(value ?? "-")}
+                                </span>
+                              ) : (
+                                <span>{String(value ?? "-")}</span>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </article>
+                    ))}
+                  </div>
                 </div>
               </div>
 
               <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
                 <h2 className="mb-4 text-lg font-bold text-gray-900">Hardware Installed per Booth</h2>
                 <div className="overflow-x-auto">
-                  <table className="w-full min-w-[1080px] border-collapse text-sm">
+                  <table className="hidden w-full min-w-[1080px] border-collapse text-sm md:table">
                     <thead>
                       <tr className="border-b border-gray-200 text-left text-gray-600">
                         <th className="py-2 pr-3">Booth</th>
@@ -1442,6 +1508,20 @@ export function AppAdminDashboard({ onLogout }: AppAdminDashboardProps) {
                       ))}
                     </tbody>
                   </table>
+
+                  <div className="space-y-3 md:hidden">
+                    {filteredBoothHardwareRows.map((row, index) => (
+                      <article key={`${row.serial}-${index}`} className="rounded-xl border border-gray-200 bg-gray-50 p-3">
+                        <p className="text-sm font-semibold text-gray-900">{row.booth}</p>
+                        <p className="mt-1 text-xs text-gray-600">Serial: {row.serial}</p>
+                        <p className="mt-1 text-xs text-gray-600">Type: {row.type}</p>
+                        <p className="mt-1 text-xs text-gray-600">Model: {row.model}</p>
+                        <p className="mt-1 text-xs text-gray-600">Firmware: {row.firmware}</p>
+                        <p className="mt-1 text-xs text-gray-600">Condition: {row.condition}</p>
+                        <p className="mt-1 text-xs text-gray-600">Warranty: {row.warrantyExpiry}</p>
+                      </article>
+                    ))}
+                  </div>
                 </div>
               </div>
             </section>
@@ -1479,7 +1559,7 @@ export function AppAdminDashboard({ onLogout }: AppAdminDashboardProps) {
                 <div key={group.organization} className="rounded-lg border border-gray-200 p-4">
                   <h3 className="mb-3 text-base font-semibold text-gray-900">{group.organization}</h3>
                   <div className="overflow-x-auto">
-                    <table className="w-full min-w-[980px] border-collapse text-sm">
+                    <table className="hidden w-full min-w-[980px] border-collapse text-sm md:table">
                       <thead>
                         <tr className="border-b border-gray-200 text-left text-gray-600">
                           <th className="py-2 pr-3">Name</th>
@@ -1546,6 +1626,43 @@ export function AppAdminDashboard({ onLogout }: AppAdminDashboardProps) {
                         })}
                       </tbody>
                     </table>
+
+                    <div className="space-y-3 md:hidden">
+                      {group.users.map((user) => {
+                        const isIndividual = String(user.subscriptionType ?? "Organization") === "Individual";
+                        return (
+                          <article key={String(user.id)} className="rounded-xl border border-gray-200 bg-gray-50 p-3">
+                            <p className="text-sm font-semibold text-gray-900">{String(user.name ?? "-")}</p>
+                            <p className="mt-1 text-xs text-gray-500">{String(user.email ?? "-")}</p>
+                            <p className="mt-1 text-xs text-gray-600">Role: {String(user.role ?? "-")}</p>
+                            <div className="mt-2 flex flex-wrap gap-2">
+                              <span className={clsx("inline-flex rounded-full px-2 py-1 text-xs font-medium", getStatusTone(String(user.status ?? "")))}>
+                                {String(user.status ?? "-")}
+                              </span>
+                              <span className={clsx(
+                                "inline-flex rounded-full px-2 py-1 text-xs font-medium",
+                                isIndividual ? "bg-violet-100 text-violet-700" : "bg-indigo-100 text-indigo-700"
+                              )}>
+                                {isIndividual ? "Individual" : "Organization"}
+                              </span>
+                            </div>
+                            <p className="mt-2 text-xs text-gray-600">Spend: INR {Number(user.individualSpendInr ?? 0).toLocaleString()}</p>
+                            <div className="mt-3 flex flex-wrap items-center gap-2">
+                              <button
+                                type="button"
+                                onClick={() => updateUserIndividualSubscription(Number(user.id), !isIndividual)}
+                                className={clsx(
+                                  "rounded-lg px-2 py-1 text-xs font-medium",
+                                  isIndividual ? "bg-gray-100 text-gray-700 hover:bg-gray-200" : "bg-violet-100 text-violet-700 hover:bg-violet-200"
+                                )}
+                              >
+                                {isIndividual ? "Move to Org Plan" : "Enable Individual Plan"}
+                              </button>
+                            </div>
+                          </article>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -1583,7 +1700,7 @@ export function AppAdminDashboard({ onLogout }: AppAdminDashboardProps) {
               </div>
 
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[900px] border-collapse text-sm">
+                <table className="hidden w-full min-w-[900px] border-collapse text-sm md:table">
                   <thead>
                     <tr className="border-b border-gray-200 text-left text-gray-600">
                       {currentConfig.columns.map((column) => (
@@ -1615,6 +1732,29 @@ export function AppAdminDashboard({ onLogout }: AppAdminDashboardProps) {
                     ))}
                   </tbody>
                 </table>
+
+                <div className="space-y-3 md:hidden">
+                  {filteredRows.map((row) => (
+                    <article key={String(row.id)} className="rounded-xl border border-gray-200 bg-gray-50 p-3">
+                      {currentConfig.columns.map((column) => {
+                        const value = row[column.key];
+                        const isStatus = column.key === "status";
+                        return (
+                          <div key={`${row.id}-${column.key}`} className="mt-1 text-xs text-gray-600 first:mt-0">
+                            <span className="font-medium text-gray-700">{column.label}: </span>
+                            {isStatus ? (
+                              <span className={clsx("inline-flex rounded-full px-2 py-1 text-xs font-medium", getStatusTone(String(value ?? "")))}>
+                                {String(value ?? "-")}
+                              </span>
+                            ) : (
+                              <span>{String(value ?? "-")}</span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </article>
+                  ))}
+                </div>
               </div>
             </section>
           )}
