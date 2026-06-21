@@ -121,7 +121,7 @@ export function BooksTab({
 
         {showHistory && (
           <div className="mt-4 overflow-x-auto">
-            <table className="w-full min-w-[600px] border-collapse text-sm">
+            <table className="hidden w-full min-w-[600px] border-collapse text-sm md:table">
               <thead>
                 <tr className="border-b border-gray-200 text-left text-gray-600">
                   <th className="py-2">Book</th>
@@ -141,6 +141,17 @@ export function BooksTab({
                 ))}
               </tbody>
             </table>
+
+            <div className="space-y-3 md:hidden">
+              {borrowHistory.map((row) => (
+                <article key={row.id} className="rounded-xl border border-gray-200 bg-gray-50 p-3">
+                  <p className="text-sm font-semibold text-gray-900">{row.title}</p>
+                  <p className="mt-1 text-xs text-gray-600">Borrowed: {formatDate(row.borrowedDate)}</p>
+                  <p className="mt-1 text-xs text-gray-600">Returned: {formatDate(row.returnedDate)}</p>
+                  <p className="mt-1 text-xs text-gray-500">Booth: {row.boothName}</p>
+                </article>
+              ))}
+            </div>
           </div>
         )}
       </div>

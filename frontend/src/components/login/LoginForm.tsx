@@ -44,7 +44,7 @@ const DEMO_USERS: Record<
     primaryRole: "operator",
     allowedRoles: ["operator"],
   },
-  "usertype.codecrest": {
+  "orgadmin.codecrest": {
     password: "demo@123",
     primaryRole: "org_admin",
     allowedRoles: ["org_admin"],
